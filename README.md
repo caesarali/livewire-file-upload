@@ -39,6 +39,21 @@ Add the component to a standard HTML form:
 
 The form itself is submitted normally. Livewire only handles the temporary upload and places signed file references in the submitted form.
 
+### Custom placeholder
+
+Pass custom placeholder markup through the default slot:
+
+```blade
+<livewire:file-upload name="documents" multiple>
+    <span>
+        Drop your documents here or
+        <span class="filepond--label-action">browse</span>
+    </span>
+</livewire:file-upload>
+```
+
+When no slot is provided, the component uses FilePond's default placeholder.
+
 Use `ResolvesTemporaryUploads` in the Form Request that handles the form:
 
 ```php
@@ -110,7 +125,6 @@ Access it with `$request->file('avatar')`.
 | `max-files` | `null` | Maximum number of files for a multiple upload. |
 | `mimetypes` | `null` | Comma-separated MIME types accepted by validation. |
 | `validation-rules` | `[]` | Additional Laravel rules applied to each uploaded file. |
-| `placeholder` | FilePond prompt | Custom FilePond label HTML. |
 | `max-files-message` | Package default | Custom message when `max-files` is exceeded. |
 
 The final validation rules should still be defined in the Form Request. Component validation provides immediate upload feedback, while the Form Request remains the authoritative validation before the controller processes the files.

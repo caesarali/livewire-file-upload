@@ -30,12 +30,6 @@ class FileUpload extends Component
     /** @var array<int, mixed> */
     public array $validationRules = [];
 
-    public string $placeholder = '
-        <span class="text-sm">
-            Drag & drop your file or <span class="filepond--label-action text-primary"> Browse </span>
-        </span>
-    ';
-
     public string $maxFilesMessage = 'You can upload a maximum of :max files.';
 
     public function rules(): array

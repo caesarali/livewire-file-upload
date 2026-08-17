@@ -9,6 +9,21 @@ it('registers the file upload component', function () {
     expect(Livewire::new('file-upload'))->toBeInstanceOf(FileUpload::class);
 });
 
+it('uses the FilePond default placeholder when no slot is given', function () {
+    expect(Livewire::mount('file-upload'))
+        ->not->toContain('pond.setOptions({ labelIdle:');
+});
+
+it('uses the default slot as a custom placeholder', function () {
+    $html = Livewire::mount('file-upload', slots: [
+        'default' => '<span>Choose your document</span>',
+    ]);
+
+    expect($html)
+        ->toContain('pond.setOptions({ labelIdle:')
+        ->toContain('Choose your document');
+});
+
 it('renders a signed reference for a single temporary upload', function () {
     Storage::fake('local');
 

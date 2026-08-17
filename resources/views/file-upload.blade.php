@@ -6,7 +6,7 @@
         :disabled="$disabled"
         :max-files="$maxFiles"
         :maxfilesmsg="$maxFilesMessage"
-        :placeholder="$placeholder"
+        :placeholder="$slots->has('default') ? $slot : null"
     />
 
     @foreach ($this->signedFilePaths as $signedFilePath)
