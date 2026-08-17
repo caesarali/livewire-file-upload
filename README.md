@@ -10,11 +10,10 @@ A FilePond-powered Livewire component for files that are uploaded through Livewi
 
 ## Installation
 
-Until the package is available on Packagist, install it directly from GitHub:
+Install the package via Composer:
 
 ```bash
-composer config repositories.livewire-file-upload vcs https://github.com/caesarali/livewire-file-upload
-composer require caesarali/livewire-file-upload:dev-main
+composer require caesarali/livewire-file-upload
 ```
 
 The package registers the component and loads the required FilePond assets automatically.
