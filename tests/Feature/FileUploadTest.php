@@ -1,0 +1,29 @@
+<?php
+
+use Caesarali\LivewireFileUpload\FileUpload;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
+
+it('registers the file upload component', function () {
+    expect(Livewire::new('file-upload'))->toBeInstanceOf(FileUpload::class);
+});
+
+it('renders a signed reference for a single temporary upload', function () {
+    Storage::fake('local');
+
+    Livewire::test(FileUpload::class, ['name' => 'document'])
+        ->set('file', UploadedFile::fake()->create('document.pdf', 10, 'application/pdf'))
+        ->assertSee('_livewire_uploads[document]', escape: false);
+});
+
+it('renders signed references for multiple temporary uploads', function () {
+    Storage::fake('local');
+
+    Livewire::test(FileUpload::class, ['name' => 'documents', 'multiple' => true])
+        ->set('file', [
+            UploadedFile::fake()->create('first.pdf', 10, 'application/pdf'),
+            UploadedFile::fake()->create('second.pdf', 10, 'application/pdf'),
+        ])
+        ->assertSee('_livewire_uploads[documents][]', escape: false);
+});
