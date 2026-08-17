@@ -32,6 +32,13 @@ class FileUpload extends Component
 
     public string $maxFilesMessage = 'You can upload a maximum of :max files.';
 
+    public function mount(): void
+    {
+        if ($this->multiple) {
+            $this->file = [];
+        }
+    }
+
     public function rules(): array
     {
         $fileRules = ['required', 'file', ...$this->validationRules];

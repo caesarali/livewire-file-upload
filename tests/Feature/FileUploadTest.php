@@ -42,3 +42,8 @@ it('renders signed references for multiple temporary uploads', function () {
         ])
         ->assertSee('_livewire_uploads[documents][]', escape: false);
 });
+
+it('initializes multiple uploads as an array', function () {
+    Livewire::test(FileUpload::class, ['multiple' => true])
+        ->assertSet('file', []);
+});
