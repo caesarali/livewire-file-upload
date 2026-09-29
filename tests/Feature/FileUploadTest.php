@@ -14,9 +14,11 @@ it('uses the FilePond default placeholder when no slot is given', function () {
         ->not->toContain('pond.setOptions({ labelIdle:');
 });
 
-it('does not submit FilePond\'s redundant form field', function () {
+it('keeps a valid FilePond name and removes its redundant form field on submit', function () {
     expect(Livewire::mount('file-upload'))
-        ->toContain('name\\u0022:\\u0022\\u0022');
+        ->toContain('name\\u0022:\\u0022filepond-')
+        ->toContain('x-on:formdata.capture.window=')
+        ->toContain('formData.delete');
 });
 
 it('uses the default slot as a custom placeholder', function () {

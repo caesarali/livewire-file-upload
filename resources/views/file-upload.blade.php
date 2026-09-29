@@ -1,7 +1,10 @@
-<div>
+<div
+    x-data
+    x-on:formdata.capture.window="$event.formData.delete(@js('filepond-'.$this->getId()))"
+>
     <x-filepond::upload
         wire:model="file"
-        name=""
+        name="filepond-{{ $this->getId() }}"
         :multiple="$multiple"
         :required="$required"
         :disabled="$disabled"
