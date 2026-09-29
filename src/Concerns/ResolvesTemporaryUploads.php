@@ -2,12 +2,11 @@
 
 namespace Caesarali\LivewireFileUpload\Concerns;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
-/** @mixin FormRequest */
 trait ResolvesTemporaryUploads
 {
     protected function prepareForValidation(): void
@@ -15,9 +14,19 @@ trait ResolvesTemporaryUploads
         $this->resolveTemporaryUploads();
     }
 
-    protected function resolveTemporaryUploads(): void
+    /** @param array<int|string, mixed> $parameters */
+    public function callAction(mixed $method, mixed $parameters): mixed
     {
-        foreach ((array) $this->input('_livewire_uploads') as $field => $signedPaths) {
+        $this->resolveTemporaryUploads(request());
+
+        return $this->{$method}(...array_values($parameters));
+    }
+
+    protected function resolveTemporaryUploads(?Request $request = null): void
+    {
+        $request ??= $this instanceof Request ? $this : request();
+
+        foreach ((array) $request->input('_livewire_uploads') as $field => $signedPaths) {
             $multiple = is_array($signedPaths);
             $files = [];
 
@@ -43,12 +52,12 @@ trait ResolvesTemporaryUploads
                 $files[] = $file;
             }
 
-            $this->files->set(
+            $request->files->set(
                 $field,
                 $multiple ? $files : ($files[0] ?? null),
             );
         }
 
-        $this->request->remove('_livewire_uploads');
+        $request->request->remove('_livewire_uploads');
     }
 }

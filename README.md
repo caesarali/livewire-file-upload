@@ -91,6 +91,37 @@ public function store(StoreDocumentRequest $request): RedirectResponse
 }
 ```
 
+### Controller with a standard Request
+
+Use the same trait on a controller to resolve signed uploads automatically before its action runs:
+
+```php
+use Caesarali\LivewireFileUpload\Concerns\ResolvesTemporaryUploads;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+
+class DocumentController extends Controller
+{
+    use ResolvesTemporaryUploads;
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'documents' => ['required', 'array'],
+            'documents.*' => ['file', 'mimetypes:application/pdf', 'max:10240'],
+        ]);
+
+        foreach ($validated['documents'] as $document) {
+            $document->store('documents');
+        }
+
+        return back();
+    }
+}
+```
+
+The trait runs before the controller action, so `$request->file('documents')` is available there. Keep final file validation in the controller.
+
 ### Single file
 
 Omit `multiple` for a single file:
@@ -118,7 +149,7 @@ Access it with `$request->file('avatar')`.
 
 | Property | Default | Description |
 | --- | --- | --- |
-| `name` | `files` | Field name received by the Form Request. |
+| `name` | `files` | Field name received by the request. |
 | `multiple` | `false` | Allows multiple files. |
 | `required` | `false` | Marks the FilePond input as required. |
 | `disabled` | `false` | Disables the FilePond input. |
@@ -127,7 +158,7 @@ Access it with `$request->file('avatar')`.
 | `validation-rules` | `[]` | Additional Laravel rules applied to each uploaded file. |
 | `max-files-message` | Package default | Custom message when `max-files` is exceeded. |
 
-The final validation rules should still be defined in the Form Request. Component validation provides immediate upload feedback, while the Form Request remains the authoritative validation before the controller processes the files.
+The final validation rules should still be defined in the Form Request or controller. Component validation provides immediate upload feedback, while request validation remains authoritative before files are stored.
 
 ## Existing `prepareForValidation()` method
 
@@ -148,9 +179,9 @@ protected function prepareForValidation(): void
 
 1. FilePond uploads files to Livewire's temporary upload storage.
 2. The component adds signed temporary-file references to the HTML form.
-3. `ResolvesTemporaryUploads` verifies those references and restores them as `TemporaryUploadedFile` instances before Form Request validation.
+3. `ResolvesTemporaryUploads` verifies those references and restores them as `TemporaryUploadedFile` instances before Form Request or controller validation.
 
-Invalid, modified, expired, or missing temporary upload references are rejected. Always validate file type and size in the Form Request before storing a file.
+Invalid, modified, expired, or missing temporary upload references are rejected. Always validate file type and size in the request before storing a file.
 
 ## Testing
 

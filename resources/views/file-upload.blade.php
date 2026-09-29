@@ -1,6 +1,7 @@
 <div>
     <x-filepond::upload
         wire:model="file"
+        name=""
         :multiple="$multiple"
         :required="$required"
         :disabled="$disabled"
