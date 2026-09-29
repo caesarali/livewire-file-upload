@@ -1,4 +1,4 @@
-<div class="border rounded">
+<div>
     <x-filepond::upload
         wire:model="file"
         :multiple="$multiple"
